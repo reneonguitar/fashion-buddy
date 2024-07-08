@@ -24,8 +24,6 @@ export default function RecommendedProducts() {
     gender: ['all'],
   });
 
-  console.log('items', items);
-
   const getProducts = async () => {
     try {
       setLoading(true);

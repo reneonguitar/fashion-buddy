@@ -10,7 +10,7 @@ What should happen from the user's perspective is that:
 4. The embedding gets sent to the Astra DB vector database for similarity search
 5. The most relevant results get sent back to the user
 
-![Fashion Buddy Flow](diagram-amazon-anthropic.png)
+![Fashion Buddy Flow](assets/diagram-amazon-anthropic.png)
 
 ## Getting Started
 
@@ -57,7 +57,17 @@ This step calls Gemini with each product image and gets an item description to e
 
 ### Run the application
 
-Run the development server:
+Install the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
