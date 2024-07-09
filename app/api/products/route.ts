@@ -10,27 +10,17 @@ import {
 } from '@langchain/community/vectorstores/astradb';
 import { ChatAnthropic } from '@langchain/anthropic';
 import { BedrockEmbeddings } from '@langchain/community/embeddings/bedrock';
-import { secret } from '@aws-amplify/backend';
 
 // Environment variables
-const astraDbApplicationToken = secret(
-  'ASTRA_DB_APPLICATION_TOKEN'
-).resolve.toString();
-const astraDbEndpoint = secret('ASTRA_DB_ENDPOINT').resolve.toString();
-const astraCollection = secret('ASTRA_COLLECTION').resolve.toString();
-const anthropicApiKey = secret('ANTHROPIC_API_KEY').resolve.toString();
-const awsAccessKeyId = secret('AWS_ACCESS_KEY_ID').resolve.toString();
-const awsSecretAccessKey = secret('AWS_SECRET_ACCESS_KEY').resolve.toString();
-const awsRegion = secret('AWS_REGION').resolve.toString();
-// const {
-//   ASTRA_DB_APPLICATION_TOKEN,
-//   ASTRA_DB_ENDPOINT,
-//   ASTRA_COLLECTION,
-//   ANTHROPIC_API_KEY,
-//   _AWS_ACCESS_KEY_ID,
-//   _AWS_SECRET_ACCESS_KEY,
-//   _AWS_REGION,
-// } = process.env;
+const {
+  ASTRA_DB_APPLICATION_TOKEN,
+  ASTRA_DB_ENDPOINT,
+  ASTRA_COLLECTION,
+  ANTHROPIC_API_KEY,
+  _AWS_ACCESS_KEY_ID,
+  _AWS_SECRET_ACCESS_KEY,
+  _AWS_REGION,
+} = process.env;
 
 export async function POST(req: Request) {
   try {
@@ -38,25 +28,25 @@ export async function POST(req: Request) {
 
     // Initialize chat and embeddings models
     const anthropic_model = new ChatAnthropic({
-      apiKey: anthropicApiKey,
+      apiKey: ANTHROPIC_API_KEY,
       modelName: 'claude-3-sonnet-20240229',
       streaming: false,
     });
 
     const embeddings_model = new BedrockEmbeddings({
-      region: awsRegion,
+      region: _AWS_REGION,
       credentials: {
-        accessKeyId: awsAccessKeyId,
-        secretAccessKey: awsSecretAccessKey,
+        accessKeyId: _AWS_ACCESS_KEY_ID,
+        secretAccessKey: _AWS_SECRET_ACCESS_KEY,
       },
       model: 'amazon.titan-embed-image-v1',
     });
 
     // Create astra config and initailize vector store
     const astraConfig: AstraLibArgs = {
-      token: astraDbApplicationToken,
-      endpoint: astraDbEndpoint,
-      collection: astraCollection,
+      token: ASTRA_DB_APPLICATION_TOKEN,
+      endpoint: ASTRA_DB_ENDPOINT,
+      collection: ASTRA_COLLECTION,
       collectionOptions: {
         vector: {
           dimension: 1024,
