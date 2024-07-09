@@ -32,10 +32,10 @@ export async function POST(req: Request) {
     });
 
     const embeddings_model = new BedrockEmbeddings({
-      region: process.env.AWS_REGION!,
+      region: process.env._AWS_REGION!,
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+        accessKeyId: process.env._AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env._AWS_SECRET_ACCESS_KEY!,
       },
       model: 'amazon.titan-embed-image-v1',
     });

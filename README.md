@@ -10,7 +10,7 @@ What should happen from the user's perspective is that:
 4. The embedding gets sent to the Astra DB vector database for similarity search
 5. The most relevant results get sent back to the user
 
-![Fashion Buddy Flow](assets/diagram-amazon-anthropic.png)
+![Fashion Buddy Flow](diagram-amazon-anthropic.png)
 
 ## Getting Started
 
@@ -44,9 +44,9 @@ NOTE: The data ingestion portion of this application is not currently set up for
    - `ASTRA_DB_APPLICATION_TOKEN`: The generated app token for your Astra database
      - To create a new token go to your database's `Connect` tab and click `Generate Token`. (your Application Token begins with `AstraCS:...`)
    - `ASTRA_COLLECTION`: The name of the Astra DB collection to use for the similarity search
-   - `AWS_ACCESS_KEY_ID`: AWS Access Key ID
-   - `AWS_SECRET_ACCESS_KEY`: AWS Secret Access Key
-   - `AWS_REGION`: AWS Region
+   - `_AWS_ACCESS_KEY_ID`: AWS Access Key ID
+   - `_AWS_SECRET_ACCESS_KEY`: AWS Secret Access Key
+   - `_AWS_REGION`: AWS Region
 
 ### Load your DB
 

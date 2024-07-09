@@ -39,13 +39,21 @@ export default function RecommendedProducts() {
         }),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+
+      if (!data.products) {
+        throw new Error('Invalid response format: products field is missing');
+      }
 
       const items = data.products;
       setItems(items);
       setLoading(false);
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching products:', error);
       setLoading(false);
     }
   };
