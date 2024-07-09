@@ -17,8 +17,15 @@ import { ChatAnthropic } from '@langchain/anthropic';
 import { BedrockEmbeddings } from '@langchain/community/embeddings/bedrock';
 
 // Environment variables
-const { ASTRA_DB_APPLICATION_TOKEN, ASTRA_DB_ENDPOINT, ANTHROPIC_API_KEY } =
-  process.env;
+const {
+  ASTRA_DB_APPLICATION_TOKEN,
+  ASTRA_DB_ENDPOINT,
+  ASTRA_COLLECTION,
+  ANTHROPIC_API_KEY,
+  _AWS_ACCESS_KEY_ID,
+  _AWS_SECRET_ACCESS_KEY,
+  _AWS_REGION,
+} = process.env;
 
 export async function POST(req: Request) {
   try {
@@ -26,16 +33,16 @@ export async function POST(req: Request) {
 
     // Initialize chat and embeddings models
     const anthropic_model = new ChatAnthropic({
-      apiKey: ANTHROPIC_API_KEY,
+      apiKey: ANTHROPIC_API_KEY!,
       modelName: 'claude-3-sonnet-20240229',
       streaming: false,
     });
 
     const embeddings_model = new BedrockEmbeddings({
-      region: process.env._AWS_REGION!,
+      region: _AWS_REGION!,
       credentials: {
-        accessKeyId: process.env._AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env._AWS_SECRET_ACCESS_KEY!,
+        accessKeyId: _AWS_ACCESS_KEY_ID!,
+        secretAccessKey: _AWS_SECRET_ACCESS_KEY!,
       },
       model: 'amazon.titan-embed-image-v1',
     });
@@ -44,7 +51,7 @@ export async function POST(req: Request) {
     const astraConfig: AstraLibArgs = {
       token: ASTRA_DB_APPLICATION_TOKEN,
       endpoint: ASTRA_DB_ENDPOINT,
-      collection: process.env.ASTRA_COLLECTION,
+      collection: ASTRA_COLLECTION,
       collectionOptions: {
         vector: {
           dimension: 1024,
