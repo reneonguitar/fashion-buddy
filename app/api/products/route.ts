@@ -1,11 +1,6 @@
-// import { HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 import { Document } from '@langchain/core/documents';
 import { HumanMessage } from '@langchain/core/messages';
 import { StringOutputParser } from '@langchain/core/output_parsers';
-// import {
-//   ChatGoogleGenerativeAI,
-//   GoogleGenerativeAIEmbeddings,
-// } from '@langchain/google-genai';
 import { NextResponse } from 'next/server';
 import { RunnableLambda, RunnableSequence } from '@langchain/core/runnables';
 import { Filters, ProductType } from '@/utils/types';
@@ -15,25 +10,27 @@ import {
 } from '@langchain/community/vectorstores/astradb';
 import { ChatAnthropic } from '@langchain/anthropic';
 import { BedrockEmbeddings } from '@langchain/community/embeddings/bedrock';
+import { secret } from '@aws-amplify/backend';
 
 // Environment variables
-const {
-  ASTRA_DB_APPLICATION_TOKEN,
-  ASTRA_DB_ENDPOINT,
-  ASTRA_COLLECTION,
-  ANTHROPIC_API_KEY,
-  _AWS_ACCESS_KEY_ID,
-  _AWS_SECRET_ACCESS_KEY,
-  _AWS_REGION,
-} = process.env;
-
-console.log('ANTHROPIC_API_KEY', ANTHROPIC_API_KEY);
-console.log('ASTRA_DB_APPLICATION_TOKEN', ASTRA_DB_APPLICATION_TOKEN);
-console.log('ASTRA_DB_ENDPOINT', ASTRA_DB_ENDPOINT);
-console.log('ASTRA_COLLECTION', ASTRA_COLLECTION);
-console.log('_AWS_ACCESS_KEY_ID', _AWS_ACCESS_KEY_ID);
-console.log('_AWS_SECRET_ACCESS_KEY', _AWS_SECRET_ACCESS_KEY);
-console.log('_AWS_REGION', _AWS_REGION);
+const astraDbApplicationToken = secret(
+  'ASTRA_DB_APPLICATION_TOKEN'
+).resolve.toString();
+const astraDbEndpoint = secret('ASTRA_DB_ENDPOINT').resolve.toString();
+const astraCollection = secret('ASTRA_COLLECTION').resolve.toString();
+const anthropicApiKey = secret('ANTHROPIC_API_KEY').resolve.toString();
+const awsAccessKeyId = secret('AWS_ACCESS_KEY_ID').resolve.toString();
+const awsSecretAccessKey = secret('AWS_SECRET_ACCESS_KEY').resolve.toString();
+const awsRegion = secret('AWS_REGION').resolve.toString();
+// const {
+//   ASTRA_DB_APPLICATION_TOKEN,
+//   ASTRA_DB_ENDPOINT,
+//   ASTRA_COLLECTION,
+//   ANTHROPIC_API_KEY,
+//   _AWS_ACCESS_KEY_ID,
+//   _AWS_SECRET_ACCESS_KEY,
+//   _AWS_REGION,
+// } = process.env;
 
 export async function POST(req: Request) {
   try {
@@ -41,25 +38,25 @@ export async function POST(req: Request) {
 
     // Initialize chat and embeddings models
     const anthropic_model = new ChatAnthropic({
-      apiKey: ANTHROPIC_API_KEY!,
+      apiKey: anthropicApiKey,
       modelName: 'claude-3-sonnet-20240229',
       streaming: false,
     });
 
     const embeddings_model = new BedrockEmbeddings({
-      region: _AWS_REGION!,
+      region: awsRegion,
       credentials: {
-        accessKeyId: _AWS_ACCESS_KEY_ID!,
-        secretAccessKey: _AWS_SECRET_ACCESS_KEY!,
+        accessKeyId: awsAccessKeyId,
+        secretAccessKey: awsSecretAccessKey,
       },
       model: 'amazon.titan-embed-image-v1',
     });
 
     // Create astra config and initailize vector store
     const astraConfig: AstraLibArgs = {
-      token: ASTRA_DB_APPLICATION_TOKEN,
-      endpoint: ASTRA_DB_ENDPOINT,
-      collection: ASTRA_COLLECTION,
+      token: astraDbApplicationToken,
+      endpoint: astraDbEndpoint,
+      collection: astraCollection,
       collectionOptions: {
         vector: {
           dimension: 1024,
