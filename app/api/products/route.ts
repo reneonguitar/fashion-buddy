@@ -27,6 +27,14 @@ const {
   _AWS_REGION,
 } = process.env;
 
+console.log('ANTHROPIC_API_KEY', ANTHROPIC_API_KEY);
+console.log('ASTRA_DB_APPLICATION_TOKEN', ASTRA_DB_APPLICATION_TOKEN);
+console.log('ASTRA_DB_ENDPOINT', ASTRA_DB_ENDPOINT);
+console.log('ASTRA_COLLECTION', ASTRA_COLLECTION);
+console.log('_AWS_ACCESS_KEY_ID', _AWS_ACCESS_KEY_ID);
+console.log('_AWS_SECRET_ACCESS_KEY', _AWS_SECRET_ACCESS_KEY);
+console.log('_AWS_REGION', _AWS_REGION);
+
 export async function POST(req: Request) {
   try {
     const data = await req.json();
